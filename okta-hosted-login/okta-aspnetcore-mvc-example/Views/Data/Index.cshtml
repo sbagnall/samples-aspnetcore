@@ -1,0 +1,21 @@
+﻿@model List<okta_aspnetcore_mvc_example.Controllers.ApiDataModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<section>
+    <h1>Messages from Api</h1>
+    @{
+        foreach (var apiDataModel in Model)
+        {
+            <div>
+                <label>@apiDataModel.Date</label>
+                <span>:</span>
+                <span> @apiDataModel.Text</span>
+            </div>
+        }
+    }
+
+</section>
