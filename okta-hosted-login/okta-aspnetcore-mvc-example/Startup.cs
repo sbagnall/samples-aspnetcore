@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using okta_aspnetcore_mvc_example.Controllers;
+using okta_aspnetcore_mvc_example.Services;
 using Okta.AspNetCore;
 
 namespace okta_aspnetcore_mvc_example
@@ -24,6 +25,7 @@ namespace okta_aspnetcore_mvc_example
 
             services.AddSingleton(Configuration);
             services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
+            services.Configure<OktaSettings>(Configuration.GetSection("Okta"));
 
             var oktaMvcOptions = new OktaMvcOptions();
             Configuration.GetSection("Okta").Bind(oktaMvcOptions);
@@ -38,11 +40,11 @@ namespace okta_aspnetcore_mvc_example
             })
             .AddCookie()
             .AddOktaMvc(oktaMvcOptions);
-
             
             services.AddHttpContextAccessor();
             //services.AddHttpClient();
 
+            services.AddSingleton<ITokenService, OktaTokenService>();
             services.AddMvc();
 
         }
