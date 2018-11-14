@@ -61,8 +61,8 @@ namespace okta_aspnetcore_mvc_example.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<List<ApiDataModel>>(json);
-                    return View(data);
+                    var data = JsonConvert.DeserializeObject<ApiMessages>(json);
+                    return View(data.Messages);
                 }
 
                 return Content(response.StatusCode.ToString());
@@ -71,5 +71,8 @@ namespace okta_aspnetcore_mvc_example.Controllers
 
     }
 
-
+    public class ApiMessages
+    {
+        public List<ApiDataModel> Messages { get; set; }
+    }
 }
