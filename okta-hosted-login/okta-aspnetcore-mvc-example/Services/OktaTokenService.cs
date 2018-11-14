@@ -27,6 +27,7 @@ namespace okta_aspnetcore_mvc_example.Services
             }
             return accessToken.AccessToken;
         }
+
         private async Task<OktaToken> GetNewAccessToken()
         {
             using (var client = new HttpClient())

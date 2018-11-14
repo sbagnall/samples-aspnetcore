@@ -30,28 +30,28 @@ namespace okta_aspnetcore_webapi_example
                 });
             });
 
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
-            //    options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
-            //    options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
-            //})
-            //.AddOktaWebApi(new OktaWebApiOptions()
-            //{
-            //    ClientId = Configuration["Okta:ClientId"],
-            //    OktaDomain = Configuration["Okta:OktaDomain"],
-            //});
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
+                options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
+                options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
             })
-            .AddJwtBearer(options =>
+            .AddOktaWebApi(new OktaWebApiOptions()
             {
-                options.Authority = "https://dev-108819.oktapreview.com/oauth2/default";
-                options.Audience = "api://default";
-                options.RequireHttpsMetadata = false;
+                ClientId = Configuration["Okta:ClientId"],
+                OktaDomain = Configuration["Okta:OktaDomain"],
             });
-            
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            //.AddJwtBearer(options =>
+            //{
+            //    options.Authority = "https://dev-108819.oktapreview.com/oauth2/default";
+            //    options.Audience = "api://default";
+            //    options.RequireHttpsMetadata = false;
+            //});
+
             services.AddMvc();
         }
 
