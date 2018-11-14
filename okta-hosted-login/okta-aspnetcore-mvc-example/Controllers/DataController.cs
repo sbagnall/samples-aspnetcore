@@ -14,6 +14,7 @@ using okta_aspnetcore_mvc_example.Services;
 
 namespace okta_aspnetcore_mvc_example.Controllers
 {
+    [Route("[controller]")]
     public class DataController : Controller
     {
         private readonly ITokenService tokenService;
@@ -48,6 +49,8 @@ namespace okta_aspnetcore_mvc_example.Controllers
             {
                 var token = await tokenService.GetTokenAsync();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); 
 
 
                 var response = await client
