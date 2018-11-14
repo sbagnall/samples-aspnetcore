@@ -1,22 +1,20 @@
-﻿using System;
+﻿// ReSharper disable InconsistentNaming
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using Okta.AspNetCore;
-// ReSharper disable InconsistentNaming
 
 namespace okta_aspnetcore_mvc_example.Services
 {
     public class OktaTokenService : ITokenService
     {
         private OktaToken accessToken = new OktaToken();
-        private readonly IOptions<OktaSettings> oktaSettings;
+        private readonly IOptions<OktaApiSettings> oktaSettings;
 
-        public OktaTokenService(IOptions<OktaSettings> oktaSettings)
+        public OktaTokenService(IOptions<OktaApiSettings> oktaSettings)
         {
             this.oktaSettings = oktaSettings;
         }

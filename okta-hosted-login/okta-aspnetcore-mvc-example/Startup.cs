@@ -25,7 +25,7 @@ namespace okta_aspnetcore_mvc_example
 
             services.AddSingleton(Configuration);
             services.Configure<ApiSettings>(Configuration.GetSection(nameof(ApiSettings)));
-            services.Configure<OktaSettings>(Configuration.GetSection("Okta"));
+            services.Configure<OktaApiSettings>(Configuration.GetSection(nameof(OktaApiSettings)));
 
             var oktaMvcOptions = new OktaMvcOptions();
             Configuration.GetSection("Okta").Bind(oktaMvcOptions);

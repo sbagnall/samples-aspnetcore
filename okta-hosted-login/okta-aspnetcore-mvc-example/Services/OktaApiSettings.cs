@@ -1,6 +1,6 @@
 ﻿namespace okta_aspnetcore_mvc_example.Services
 {
-    public class OktaSettings 
+    public class OktaApiSettings 
     {
         public string TokenUrl { get; set; }
         public string ClientId { get; set; }
