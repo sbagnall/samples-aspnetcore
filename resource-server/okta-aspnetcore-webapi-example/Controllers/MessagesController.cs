@@ -13,7 +13,7 @@ namespace okta_aspnetcore_webapi_example.Controllers
     {
         [HttpGet]
         [Route("~/api/messages")]
-        public IEnumerable<dynamic> Get()
+        public dynamic Get()
         {
             var principal = HttpContext.User.Identity as ClaimsIdentity;
 
@@ -21,10 +21,13 @@ namespace okta_aspnetcore_webapi_example.Controllers
                 .SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
                 ?.Value;
 
-            return new dynamic[]
+            return new 
             {
-                new { Date = DateTime.Now, Text = "I am a Robot." },
-                new { Date = DateTime.Now, Text = "Hello, world!" },
+                Messages = new []
+                {
+                    new { Date = DateTime.Now, Text = "I am a Robot." },
+                    new { Date = DateTime.Now, Text = "Hello, world!" },
+                }
             };
         }
     }

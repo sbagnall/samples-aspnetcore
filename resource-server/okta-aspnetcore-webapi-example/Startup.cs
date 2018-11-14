@@ -19,17 +19,28 @@ namespace okta_aspnetcore_webapi_example
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder =>
+                {
+                    builder.AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin()
+                    .AllowCredentials();
+                });
+            });
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = OktaDefaults.ApiAuthenticationScheme;
                 options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
                 options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
             })
-              .AddOktaWebApi(new OktaWebApiOptions()
-              {
-                  ClientId = Configuration["Okta:ClientId"],
-                  OktaDomain = Configuration["Okta:OktaDomain"],
-              });
+            .AddOktaWebApi(new OktaWebApiOptions()
+            {
+                ClientId = Configuration["Okta:ClientId"],
+                OktaDomain = Configuration["Okta:OktaDomain"],
+            });
 
             services.AddMvc();
         }
@@ -37,6 +48,8 @@ namespace okta_aspnetcore_webapi_example
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseCors("CorsPolicy");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
