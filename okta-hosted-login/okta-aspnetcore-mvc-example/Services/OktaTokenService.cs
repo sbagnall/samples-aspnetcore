@@ -19,22 +19,22 @@ namespace okta_aspnetcore_mvc_example.Services
             this.oktaSettings = oktaSettings;
         }
 
-        public async Task<string> GetTokenAsync()
+        public async Task<string> GetTokenAsync(string scopes = "")
         {
             if (!this.accessToken.IsValidAndNotExpiring)
             {
-                this.accessToken = await this.GetNewAccessToken();
+                this.accessToken = await this.GetNewAccessToken(scopes);
             }
             return accessToken.AccessToken;
         }
 
-        private async Task<OktaToken> GetNewAccessToken()
+        private async Task<OktaToken> GetNewAccessToken(string scopes)
         {
             using (var client = new HttpClient())
             {
                 PrepareOktaClient(client);
 
-                var request = GetContent();
+                var request = GetContent(scopes);
 
                 var response = await client.SendAsync(request);
 
@@ -48,12 +48,12 @@ namespace okta_aspnetcore_mvc_example.Services
             }
         }
 
-        private HttpRequestMessage GetContent()
+        private HttpRequestMessage GetContent(string scopes)
         {
             var postMessage = new Dictionary<string, string>();
             postMessage.Add("grant_type", "client_credentials");
             postMessage.Add("redirect_uri", "http://localhost:56708/authorization-code/callback");
-            postMessage.Add("scope", "access_token");
+            postMessage.Add("scope", $"access_token {scopes}".TrimEnd());
             var request = new HttpRequestMessage(HttpMethod.Post, this.oktaSettings.Value.TokenUrl)
             {
                 Content = new FormUrlEncodedContent(postMessage)

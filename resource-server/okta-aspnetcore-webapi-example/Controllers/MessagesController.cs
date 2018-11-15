@@ -30,5 +30,26 @@ namespace okta_aspnetcore_webapi_example.Controllers
                 }
             };
         }
+        
+        [HttpGet]
+        [Route("~/api/restricted_messages")]
+        [Authorize(policy:"myPolicy")]
+        public dynamic GetData()
+        {
+            var principal = HttpContext.User.Identity as ClaimsIdentity;
+
+            var login = principal.Claims
+                .SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier)
+                ?.Value;
+
+            return new 
+            {
+                Messages = new []
+                {
+                    new { Date = DateTime.Now, Text = "I am the IRobot." },
+                    new { Date = DateTime.Now, Text = "Hello, world!" },
+                }
+            };
+        }
     }
 }

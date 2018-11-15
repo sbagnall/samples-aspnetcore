@@ -7,6 +7,6 @@ namespace okta_aspnetcore_mvc_example.Services
 {
     public interface ITokenService
     {
-        Task<string> GetTokenAsync();
+        Task<string> GetTokenAsync(string scopes = "");
     }
 }

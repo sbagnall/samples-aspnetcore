@@ -26,15 +26,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Okta Sample App</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Okta Spike</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Data" asp-action="IndexWithoutToken">Try Without Token</a></li>
-                    <li><a asp-area="" asp-controller="Data" asp-action="Index">Retrieve With Token</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Data" asp-action="IndexWithoutToken">Without Token and Policy</a></li>
+                    <li><a asp-area="" asp-controller="Data" asp-action="Index">With Token</a></li>
+                    <li><a asp-area="" asp-controller="Data" asp-action="IndexWithoutPolicy">With Token Without Policy</a></li>
+                    <li><a asp-area="" asp-controller="Data" asp-action="IndexWithPolicy">With Token And Policy</a></li>
+                    @*<li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
                 </ul>
                 @if (User.Identity.IsAuthenticated)
                 {

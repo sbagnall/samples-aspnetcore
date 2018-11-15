@@ -41,16 +41,15 @@ namespace okta_aspnetcore_webapi_example
                 ClientId = Configuration["Okta:ClientId"],
                 OktaDomain = Configuration["Okta:OktaDomain"],
             });
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //})
-            //.AddJwtBearer(options =>
-            //{
-            //    options.Authority = "https://dev-108819.oktapreview.com/oauth2/default";
-            //    options.Audience = "api://default";
-            //    options.RequireHttpsMetadata = false;
-            //});
+            
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("myPolicy", builder =>
+                {
+                    // require scope1
+                    builder.RequireRole("api");
+                });
+            });
 
             services.AddMvc();
         }
