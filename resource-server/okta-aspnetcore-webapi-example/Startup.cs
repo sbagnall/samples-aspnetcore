@@ -40,17 +40,9 @@ namespace okta_aspnetcore_webapi_example
             {
                 ClientId = Configuration["Okta:ClientId"],
                 OktaDomain = Configuration["Okta:OktaDomain"],
+
             });
             
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("myPolicy", builder =>
-                {
-                    // require scope1
-                    builder.RequireRole("api");
-                });
-            });
-
             services.AddMvc();
         }
 

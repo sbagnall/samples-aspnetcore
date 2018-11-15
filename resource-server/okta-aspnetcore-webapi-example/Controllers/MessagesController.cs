@@ -33,7 +33,6 @@ namespace okta_aspnetcore_webapi_example.Controllers
         
         [HttpGet]
         [Route("~/api/restricted_messages")]
-        [Authorize(policy:"myPolicy")]
         public dynamic GetData()
         {
             var principal = HttpContext.User.Identity as ClaimsIdentity;
