@@ -52,6 +52,7 @@ namespace okta_aspnetcore_mvc_example.Services
         {
             var postMessage = new Dictionary<string, string>();
             postMessage.Add("grant_type", "client_credentials");
+            postMessage.Add("redirect_uri", "http://localhost:56708/authorization-code/callback");
             postMessage.Add("scope", "access_token");
             var request = new HttpRequestMessage(HttpMethod.Post, this.oktaSettings.Value.TokenUrl)
             {
