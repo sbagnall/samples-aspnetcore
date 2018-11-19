@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -44,6 +45,7 @@ namespace okta_aspnetcore_mvc_example.Controllers
         }
 
         [Route("messages")]
+        [Authorize]
         public async Task<IActionResult> Index(CancellationToken cancellation)
         {
             using (var client = new HttpClient()) //httpClientFactory.CreateClient();

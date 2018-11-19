@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using okta_aspnetcore_mvc_example.Controllers;
 using okta_aspnetcore_mvc_example.Services;
 using Okta.AspNetCore;
@@ -36,11 +38,29 @@ namespace okta_aspnetcore_mvc_example
             {
                 options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OktaDefaults.MvcAuthenticationScheme;
+                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
             .AddCookie()
-            .AddOktaMvc(oktaMvcOptions);
-            
+            //.AddOktaMvc(oktaMvcOptions)
+            .AddOpenIdConnect(options =>
+            {
+                options.ClientId = oktaMvcOptions.ClientId;
+                options.ClientSecret = oktaMvcOptions.ClientSecret;
+                options.Authority = $"{oktaMvcOptions.OktaDomain}/oauth2/default";
+                options.CallbackPath = "/authorization-code/callback";
+                options.ResponseType = "code";
+                options.SaveTokens = true;
+                options.UseTokenLifetime = false;
+                options.GetClaimsFromUserInfoEndpoint = true;
+                options.Scope.Add("openid");
+                options.Scope.Add("profile");
+                options.Scope.Add("api");
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = "name"
+                };
+            }); 
+
             services.AddHttpContextAccessor();
             //services.AddHttpClient();
 

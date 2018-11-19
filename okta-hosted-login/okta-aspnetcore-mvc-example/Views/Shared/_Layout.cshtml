@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -33,31 +34,47 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Data" asp-action="IndexWithoutToken">Without Token and Policy</a></li>
                     <li><a asp-area="" asp-controller="Data" asp-action="Index">With Token</a></li>
-                    <li><a asp-area="" asp-controller="Data" asp-action="IndexWithoutPolicy">With Token Without Policy</a></li>
-                    <li><a asp-area="" asp-controller="Data" asp-action="IndexWithPolicy">With Token And Policy</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a asp-area="" asp-controller="Data" asp-action="IndexWithoutPolicy">With Token Without Policy</a></li>
+                        <li><a asp-area="" asp-controller="Data" asp-action="IndexWithPolicy">With Token And Policy</a></li>
+                    }
                     @*<li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
+                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
                 </ul>
                 @if (User.Identity.IsAuthenticated)
                 {
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><p class="navbar-text">Hello, @User.Identity.Name</p></li>
-                            <li><a asp-controller="Home" asp-action="Profile">Profile</a></li>
-                            <li><a onclick="document.getElementById('logout_form').submit();" style="cursor: pointer;">Log out</a></li>
-                        </ul>
-                        <form asp-controller="Account" asp-action="Logout" method="post" id="logout_form"></form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><p class="navbar-text">Hello, @User.Identity.Name</p></li>
+                        <li><a asp-controller="Home" asp-action="Profile">Profile</a></li>
+                        <li><a onclick="document.getElementById('logout_form').submit();" style="cursor: pointer;">Log out</a></li>
+                    </ul>
+                    <form asp-controller="Account" asp-action="Logout" method="post" id="logout_form"></form>
                 }
                 else
                 {
-                            <ul class="nav navbar-nav navbar-right">
-                                <li><a asp-controller="Account" asp-action="Login">Log in</a></li>
-                            </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a asp-controller="Account" asp-action="Login">Log in</a></li>
+                    </ul>
                 }
-                </div>
+            </div>
         </div>
     </nav>
     <div class="container body-content">
         @RenderBody()
+        @if (User.Identity.IsAuthenticated)
+        {
+            <hr />
+            <div style="display: flex; flex-wrap: wrap; ">
+                @foreach (var userClaim in User.Claims)//((ClaimsIdentity)User.Identity).Claims)
+                {
+                    <div style="flex: 2;  word-break: keep-all; word-wrap: break-word; background-color: lightgray;  margin: 10px; padding: 5px;">
+                        <div>@userClaim.Type</div>
+                        <strong>@userClaim.Value</strong>
+                    </div>
+                }
+            </div>
+        }
         <hr />
         <footer>
             <p>&copy; 2018 - okta_aspnetcore_mvc_example</p>
