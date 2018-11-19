@@ -3,20 +3,30 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using JWT;
+using JWT.Serializers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using okta_aspnetcore_mvc_example.Models;
+using okta_aspnetcore_mvc_example.Services;
 
 namespace okta_aspnetcore_mvc_example.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly OktaApiSettings _oktaApiSettings;
+
+        public HomeController(IOptions<OktaApiSettings> oktaApiSettingsOptions)
+        {
+            _oktaApiSettings = oktaApiSettingsOptions.Value;
+        }
         public async Task<IActionResult> Index()
         {
             var idToken = await HttpContext.GetTokenAsync("id_token");
-             var accessToken = await HttpContext.GetTokenAsync("access_token");
-             var sessionToken = await HttpContext.GetTokenAsync("session_token");
+            var accessToken = await HttpContext.GetTokenAsync("access_token");
+            var sessionToken = await HttpContext.GetTokenAsync("session_token");
             return View((accessToken, idToken, sessionToken));
         }
 
@@ -44,6 +54,16 @@ namespace okta_aspnetcore_mvc_example.Controllers
         public IActionResult Profile()
         {
             return View(HttpContext.User.Claims);
+        }
+
+        [Route("token")]
+        public async Task<IActionResult> GetAll()
+        {
+            var jwtDecoder = new JWT.JwtDecoder(new JsonNetSerializer(), new JwtValidator(new JsonNetSerializer(), new UtcDateTimeProvider()), new JwtBase64UrlEncoder());
+
+            var claims = jwtDecoder.Decode(await HttpContext.GetTokenAsync("id_token"));
+
+            return Json(claims);
         }
     }
 }
