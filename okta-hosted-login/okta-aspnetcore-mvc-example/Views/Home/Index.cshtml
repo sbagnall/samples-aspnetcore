@@ -1,4 +1,6 @@
-﻿@{
+﻿@using System.Security.Claims
+@model object
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -63,6 +65,62 @@
         <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
     </a>
+</div>
+
+<div class="row">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <style>
+            div.flex-container {
+                display: flex;
+                flex-wrap: wrap;
+            }
+
+            div.flex-item {
+                flex: 2;
+                word-break: break-all;
+                word-wrap: break-word;
+                background-color: lightgray;
+                margin: 10px;
+                padding: 5px;
+            }
+        </style>
+        <hr />
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demoClaims">Claims</button>
+        <div id="demoClaims" class="collapse">
+            <div class="flex-container">
+                @foreach (var userClaim in ((ClaimsIdentity)User.Identity).Claims)
+                {
+                    <div class="flex-item">
+                        <div>@userClaim.Type</div>
+                        <strong>@userClaim.Value</strong>
+                    </div>
+                }
+            </div>
+        </div>
+        <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demoTokens">Tokens</button>
+        <div id="demoTokens" class="collapse">
+            @if (User.Identity.IsAuthenticated)
+            {
+                (var accessToken, var idToken, var sessionToken) = ((string, string, string))Model;
+            
+                <div class="flex-container">
+                    <div class="flex-item">
+                        <div>Access Token</div>
+                        <strong>@accessToken</strong>
+                    </div>
+                    <div class="flex-item">
+                        <div>Id Token</div>
+                        <strong>@idToken</strong>
+                    </div>
+                    <div class="flex-item">
+                        <div>Session Token</div>
+                        <strong>@sessionToken</strong>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
 
 <div class="row">

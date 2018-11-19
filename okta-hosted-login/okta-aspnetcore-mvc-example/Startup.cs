@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 using okta_aspnetcore_mvc_example.Controllers;
 using okta_aspnetcore_mvc_example.Services;
@@ -31,35 +36,42 @@ namespace okta_aspnetcore_mvc_example
 
             var oktaMvcOptions = new OktaMvcOptions();
             Configuration.GetSection("Okta").Bind(oktaMvcOptions);
-            oktaMvcOptions.Scope = new List<string> { "openid", "profile", "email" };
-            oktaMvcOptions.GetClaimsFromUserInfoEndpoint = true;
+            oktaMvcOptions.Scope = new List<string> {"openid", "profile", "email", "custom", "groups", "api" };
+            oktaMvcOptions.GetClaimsFromUserInfoEndpoint = false;
 
             services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-            })
-            .AddCookie()
-            //.AddOktaMvc(oktaMvcOptions)
+                {
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+               // .AddOktaMvc(oktaMvcOptions);
             .AddOpenIdConnect(options =>
             {
                 options.ClientId = oktaMvcOptions.ClientId;
                 options.ClientSecret = oktaMvcOptions.ClientSecret;
                 options.Authority = $"{oktaMvcOptions.OktaDomain}/oauth2/default";
                 options.CallbackPath = "/authorization-code/callback";
-                options.ResponseType = "code";
+                options.ResponseType = "id_token";
                 options.SaveTokens = true;
                 options.UseTokenLifetime = false;
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
-                options.Scope.Add("api");
+                options.Scope.Add("email");
+                options.Scope.Add("custom");
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = "name"
                 };
-            }); 
+            });
+
+            services.AddAuthorization(options  =>
+            {
+                options.AddPolicy("MyPolicy", policy =>
+                    policy.RequireClaim("name", "Jobair Khan"));
+            });
 
             services.AddHttpContextAccessor();
             //services.AddHttpClient();

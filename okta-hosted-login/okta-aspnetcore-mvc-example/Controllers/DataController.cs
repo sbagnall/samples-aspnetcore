@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -50,7 +51,7 @@ namespace okta_aspnetcore_mvc_example.Controllers
         {
             using (var client = new HttpClient()) //httpClientFactory.CreateClient();
             {
-                var token = await tokenService.GetTokenAsync();
+                var token = await HttpContext.GetTokenAsync("access_token");//await tokenService.GetTokenAsync();
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); 
@@ -73,13 +74,14 @@ namespace okta_aspnetcore_mvc_example.Controllers
         }
         
         [Route("messagesRestricted")]
+        [Authorize(Policy = "MyPolicy")]
         public async Task<IActionResult> IndexWithoutPolicy(CancellationToken cancellation)
         {
             return await GetRestrictedMessages("", cancellation);
         }
 
         [Route("messagesRestrictedOk")]
-        public async Task<IActionResult> IndexWithPolicy(CancellationToken cancellation)
+        public async Task<IActionResult> IndexWithCCToken(CancellationToken cancellation)
         {
             return await GetRestrictedMessages("api", cancellation);
         }
