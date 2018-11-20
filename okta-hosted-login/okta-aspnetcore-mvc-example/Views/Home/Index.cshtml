@@ -72,9 +72,10 @@
     @if (User.Identity.IsAuthenticated)
     {
         <style>
-            button {
-                border-radius: 0 10px;
+            button:nth-child(odd) {
+                border-radius: 10px 0;
             }
+
 
             div.flex-container {
                 display: flex;
@@ -127,12 +128,14 @@
                 </div>
             </div>
         </div>
+
         <a asp-action="Token">
             <button type="button" class="btn btn-info">Decode Id Token</button>
         </a>
         <a asp-action="Token" asp-route-tokenName="access_token">
             <button type="button" class="btn btn-info">Decode Access Token</button>
         </a>
+        <hr />
     }
 </div>
 
