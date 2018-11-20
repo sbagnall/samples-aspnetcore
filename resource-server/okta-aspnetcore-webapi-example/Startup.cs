@@ -39,7 +39,8 @@ namespace okta_aspnetcore_webapi_example
             .AddOktaWebApi(new OktaWebApiOptions()
             {
                 ClientId = Configuration["Okta:ClientId"],
-                OktaDomain = Configuration["Okta:OktaDomain"]
+                OktaDomain = Configuration["Okta:OktaDomain"],
+                AuthorizationServerId = Configuration["Okta:AuthorizationServer"]
             });
             
             services.AddMvc();
