@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Okta.AspNetCore;
+using okta_aspnetcore_webapi_example.Authentication;
 
 namespace okta_aspnetcore_webapi_example
 {
@@ -36,13 +36,13 @@ namespace okta_aspnetcore_webapi_example
                 options.DefaultChallengeScheme = OktaDefaults.ApiAuthenticationScheme;
                 options.DefaultSignInScheme = OktaDefaults.ApiAuthenticationScheme;
             })
-            .AddOktaWebApi(new OktaWebApiOptions()
+            .AddScheme<CustomAuthOptions, CustomAuthHandler>(nameof(CustomAuthHandler), options =>
             {
-                ClientId = Configuration["Okta:ClientId"],
-                OktaDomain = Configuration["Okta:OktaDomain"],
-                AuthorizationServerId = Configuration["Okta:AuthorizationServer"]
+                options.OktaApiClientId = "0oahhhbx12it1SljM0h7";
+                options.OktaApiClientSecret = "dg2v5hM_s9mlauLUI-Y_fHKfkJo7Dn01ngMwbP1-";
+                options.OktaApiUri = "https://dev-108819.oktapreview.com/oauth2/default/v1/introspect";
             });
-            
+
             services.AddMvc();
         }
 

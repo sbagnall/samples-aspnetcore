@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using okta_aspnetcore_webapi_example.Authentication;
 
 namespace okta_aspnetcore_webapi_example.Controllers
 {
     [Produces("application/json")]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = nameof(CustomAuthHandler))]
     public class MessagesController : Controller
     {
         [HttpGet]
