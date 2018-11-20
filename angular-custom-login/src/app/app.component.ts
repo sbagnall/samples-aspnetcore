@@ -10,25 +10,33 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-import { Router } from "@angular/router";
-import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { OktaAuthService } from '@okta/okta-angular';
+import { AdminService } from './adminService';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'app';
+  isAdmin: boolean;
   isAuthenticated: boolean;
+
+  adminService: AdminService;
+
   constructor(public oktaAuth: OktaAuthService, private router: Router) {
     this.oktaAuth.$authenticationState.subscribe(isAuthenticated => this.isAuthenticated = isAuthenticated)
+    this.adminService = new AdminService(this.oktaAuth);
   }
   async ngOnInit() {
     this.isAuthenticated = await this.oktaAuth.isAuthenticated();
+    this.isAdmin = this.isAuthenticated && await this.adminService.isInAdminGroup();
   }
   logout() {
     this.oktaAuth.logout('/');
+    this.isAdmin = false;
   }
 }

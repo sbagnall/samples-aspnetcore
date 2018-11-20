@@ -19,7 +19,7 @@ import {
   OktaAuthModule,
   OktaCallbackComponent,
 } from '@okta/okta-angular';
-
+import { AdminAuthGuard } from './adminAuthGuard';
 import sampleConfig from './.samples.config';
 
 const oktaConfig = Object.assign({
@@ -34,6 +34,7 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { MessagesComponent } from './messages/messages.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AdminMessagesComponent } from './admin-messages/admin-messages.component';
 
 const appRoutes: Routes = [
   {
@@ -58,6 +59,11 @@ const appRoutes: Routes = [
     component: MessagesComponent,
     canActivate: [ OktaAuthGuard ],
   },
+  {
+    path: 'adminMessages',
+    component: AdminMessagesComponent,
+    canActivate: [ AdminAuthGuard ],
+  }
 ];
 
 @NgModule({
@@ -66,13 +72,15 @@ const appRoutes: Routes = [
     HomeComponent,
     ProfileComponent,
     MessagesComponent,
-    LoginComponent
+    LoginComponent,
+    AdminMessagesComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     OktaAuthModule.initAuth(oktaConfig),
     RouterModule.forRoot(appRoutes),
+    AdminAuthGuard,
   ],
   providers: [],
   bootstrap: [AppComponent]
