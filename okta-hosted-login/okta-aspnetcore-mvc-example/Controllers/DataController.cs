@@ -74,7 +74,7 @@ namespace okta_aspnetcore_mvc_example.Controllers
         }
         
         [Route("messagesRestricted")]
-        [Authorize(Policy = "MyPolicy")]
+        [Authorize(Policy = "AdminGroup")]
         public async Task<IActionResult> IndexWithoutPolicy(CancellationToken cancellation)
         {
             return await GetRestrictedMessages("", cancellation);

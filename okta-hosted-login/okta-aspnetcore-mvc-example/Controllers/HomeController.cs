@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using okta_aspnetcore_mvc_example.Models;
 using okta_aspnetcore_mvc_example.Services;
 
@@ -56,14 +57,18 @@ namespace okta_aspnetcore_mvc_example.Controllers
             return View(HttpContext.User.Claims);
         }
 
-        [Route("token")]
-        public async Task<IActionResult> GetAll()
+        [Route("token/{tokenName?}")]
+        public async Task<IActionResult> Token(string tokenName = "id_token")
         {
+            ViewBag.TokenName = tokenName;
+
             var jwtDecoder = new JWT.JwtDecoder(new JsonNetSerializer(), new JwtValidator(new JsonNetSerializer(), new UtcDateTimeProvider()), new JwtBase64UrlEncoder());
 
-            var claims = jwtDecoder.Decode(await HttpContext.GetTokenAsync("id_token"));
+            var json = jwtDecoder.Decode(await HttpContext.GetTokenAsync(tokenName));
+            
+            var claims = JsonConvert.DeserializeObject<IDictionary<string, object>>(json);
 
-            return Json(claims);
+            return View(claims);
         }
     }
 }

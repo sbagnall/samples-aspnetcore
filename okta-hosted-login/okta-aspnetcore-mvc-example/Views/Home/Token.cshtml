@@ -1,0 +1,25 @@
+﻿@model IDictionary<string, object>
+
+@{
+    ViewBag.Title = "View Token";
+}
+
+<h2>@ViewBag.Title - @ViewBag.TokenName</h2>
+
+<dl class="dl-horizontal">
+    @foreach (var data in Model)
+    {
+    <dt title="@data.Key">
+        @data.Key
+        <button type="button"
+                class="btn btn-link btn-xs"
+                aria-label="Copy to clipboard"
+                title="Copy to clipboard"
+                data-clipboard-text="@data.Value.ToString()">
+            <span class="glyphicon glyphicon glyphicon-copy" aria-hidden="true"></span>
+        </button>
+    </dt>
+
+        <dd id="@String.Format("{0}-token-data", data.Key)">@data.Value</dd>
+    }
+</dl>

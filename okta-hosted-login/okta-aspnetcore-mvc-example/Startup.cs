@@ -36,7 +36,7 @@ namespace okta_aspnetcore_mvc_example
 
             var oktaMvcOptions = new OktaMvcOptions();
             Configuration.GetSection("Okta").Bind(oktaMvcOptions);
-            oktaMvcOptions.Scope = new List<string> {"openid", "profile", "email", "custom", "api" }; // "groups",
+            oktaMvcOptions.Scope = new List<string> {"openid", "profile", "email", "custom", "api" }; 
             oktaMvcOptions.GetClaimsFromUserInfoEndpoint = false;
 
             services.AddAuthentication(options =>
@@ -47,30 +47,11 @@ namespace okta_aspnetcore_mvc_example
                 })
                 .AddCookie()
                 .AddOktaMvc(oktaMvcOptions);
-            //.AddOpenIdConnect(options =>
-            //{
-            //    options.ClientId = oktaMvcOptions.ClientId;
-            //    options.ClientSecret = oktaMvcOptions.ClientSecret;
-            //    options.Authority = $"{oktaMvcOptions.OktaDomain}/oauth2/default";
-            //    options.CallbackPath = "/authorization-code/callback";
-            //    options.ResponseType = "id_token";
-            //    options.SaveTokens = true;
-            //    options.UseTokenLifetime = false;
-            //    options.GetClaimsFromUserInfoEndpoint = true;
-            //    options.Scope.Add("openid");
-            //    options.Scope.Add("profile");
-            //    options.Scope.Add("email");
-            //    options.Scope.Add("custom");
-            //    options.TokenValidationParameters = new TokenValidationParameters
-            //    {
-            //        NameClaimType = "name"
-            //    };
-            //});
-
+            
             services.AddAuthorization(options  =>
             {
-                options.AddPolicy("MyPolicy", policy =>
-                    policy.RequireClaim("name", "Jobair Khan"));
+                options.AddPolicy("AdminGroup", policy =>
+                    policy.RequireClaim("admin_group"));
             });
 
             services.AddHttpContextAccessor();

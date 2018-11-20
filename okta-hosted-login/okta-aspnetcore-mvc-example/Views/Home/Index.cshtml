@@ -72,6 +72,10 @@
     @if (User.Identity.IsAuthenticated)
     {
         <style>
+            button {
+                border-radius: 0 10px;
+            }
+
             div.flex-container {
                 display: flex;
                 flex-wrap: wrap;
@@ -101,31 +105,34 @@
         </div>
         <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demoTokens">Tokens</button>
         <div id="demoTokens" class="collapse">
-            @if (User.Identity.IsAuthenticated)
-            {
-                (var accessToken, var idToken, var sessionToken) = ((string, string, string))Model;
+            @{ (var accessToken, var idToken, var sessionToken) = ((string, string, string))Model; }
 
-                <div class="flex-container">
-                    <div class="flex-item">
-                        <div>Access Token</div>
-                        <strong>@accessToken</strong>
-                    </div>
-                    <div class="flex-item">
-                        <div>Id Token</div>
-                        <strong>@idToken</strong>
-                    </div>
-                    <div class="flex-item">
-                        <div>Session Token</div>
-                        <strong>@sessionToken</strong>
-                    </div>
-
-                    <div class="flex-item">
-                        <div>Refresh Token</div>
-                        <strong>@await ViewContext.HttpContext.GetTokenAsync("refresh_token")</strong>
-                    </div>
+            <div class="flex-container">
+                <div class="flex-item">
+                    <div>Access Token</div>
+                    <strong>@accessToken</strong>
                 </div>
-            }
+                <div class="flex-item">
+                    <div>Id Token</div>
+                    <strong>@idToken</strong>
+                </div>
+                <div class="flex-item">
+                    <div>Session Token</div>
+                    <strong>@sessionToken</strong>
+                </div>
+
+                <div class="flex-item">
+                    <div>Refresh Token</div>
+                    <strong>@await ViewContext.HttpContext.GetTokenAsync("refresh_token")</strong>
+                </div>
+            </div>
         </div>
+        <a asp-action="Token">
+            <button type="button" class="btn btn-info">Decode Id Token</button>
+        </a>
+        <a asp-action="Token" asp-route-tokenName="access_token">
+            <button type="button" class="btn btn-info">Decode Access Token</button>
+        </a>
     }
 </div>
 
